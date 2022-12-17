@@ -92,6 +92,20 @@ delete from DEPARTMENT
 select * from department
 insert into DEPARTMENT values(1, 'Operating theatre (OT)', 'Pancho Bullent')
 
+create or replace trigger "DEPARTMENT_T2"
+AFTER
+insert on "DEPARTMENT"
+for each row
+declare
+pragma autonomous_transaction;
+begin
+if :new.department_name like 'General Surgery' then
+insert into DEPARTMENT(department_id, department_name, department_manager) values(:new.department_id, :new.department_name, :new.department_manager);
+commit;
+end if;
+end;
+
+
 --QUERY #16
 --UPDATE
 update DEPARTMENT SET department_name = 'Gastroenterology department' 
